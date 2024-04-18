@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Module of Users views
+""" module of Users views
 """
 import os
 from flask import jsonify, request
