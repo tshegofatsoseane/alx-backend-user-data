@@ -9,27 +9,27 @@ import uuid
 
 def _hash_password(password: str) -> str:
     """
-    The returned string is salted hash of the input password,
+    returned string is a salted hash of the input password,
     hashed with bcrypt.hashpw
     """
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
 
 def _generate_uuid() -> str:
-    """ Generate string representation of new UUID """
+    """ Generate string representation of a new UUID """
     return str(uuid.uuid4())
 
 
 class Auth:
-    """Auth class to interact with authentication database.
+    """Auuth class to interact with authentication database.
     """
 
     def __init__(self):
-        "create db instance"
+        "create instance of db"
         self._db = DB()
 
     def register_user(self, email: str, password: str) -> User:
-        """ register new user """
+        """ registers new user """
         try:
             user = self._db.find_user_by(email=email)
             if user:
@@ -40,7 +40,7 @@ class Auth:
             return user
 
     def valid_login(self, email: str, password: str) -> bool:
-        """ checks if password is correct foruser """
+        """ checks if password is correct for user """
         try:
             user = self._db.find_user_by(email=email)
             if user:
@@ -49,8 +49,8 @@ class Auth:
             return False
 
     def create_session(self, email: str) -> str:
-        """ takes email string argument
-        and returns session ID asstring."""
+        """ takes an email string argument
+        and returns session ID as a string."""
         try:
             user = self._db.find_user_by(email=email)
             if user:
@@ -71,12 +71,12 @@ class Auth:
             return None
 
     def destroy_session(self, user_id: int) -> None:
-        """ updates the corresponding user’s session ID to None """
+        """ The method updates the corresponding user’s session ID to None """
         self._db.update_user(user_id, session_id=None)
         return None
 
     def get_reset_password_token(self, email: str) -> str:
-        """ generates reset_token for corresponding user """
+        """ generates a reset_token for the corresponding user """
         if not email:
             return None
         try:
@@ -88,7 +88,7 @@ class Auth:
             raise ValueError
 
     def update_password(self, reset_token: str, password: str) -> None:
-        """ update user password """
+        """ update the user password """
         try:
             user = self._db.find_user_by(reset_token=reset_token)
             new_password = _hash_password(password)
@@ -97,4 +97,3 @@ class Auth:
             return None
         except Exception as e:
             raise ValueError
-
